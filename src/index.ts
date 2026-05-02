@@ -1,5 +1,7 @@
+import { envs } from "./coonfig/envs";
 import server from "./server";
-const port = process.env.PORT || 4000;
+
+const port = envs.PORT || 4000;
 server.listen(port, ()=>{
     console.log("Server running port: ", port);
 });

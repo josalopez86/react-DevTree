@@ -21,7 +21,10 @@
   },
   "homepage": "https://github.com/josalopez86/react-DevTree#readme",
   "dependencies": {
-    "express": "^5.2.1"
+    "dotenv": "^17.4.2",
+    "env-var": "^7.5.0",
+    "express": "^5.2.1",
+    "mongoose": "^9.6.1"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
