@@ -21,13 +21,19 @@
   },
   "homepage": "https://github.com/josalopez86/react-DevTree#readme",
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "colors": "^1.4.0",
     "dotenv": "^17.4.2",
     "env-var": "^7.5.0",
     "express": "^5.2.1",
-    "mongoose": "^9.6.1"
+    "express-validator": "^7.3.2",
+    "mongoose": "^9.6.1",
+    "slug": "^11.0.1"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
+    "@types/slug": "^5.0.9",
     "nodemon": "^3.1.14",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"
