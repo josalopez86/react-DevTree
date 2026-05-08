@@ -1,9 +1,16 @@
 import express from 'express';
+import cors from "cors";
 import { connectDB } from './config/bd';
 import { authRouter } from './auth.router';
 import { userRouter } from './user.router';
+import { corsConfig } from './config/cors';
+import { envs } from './config/envs';
 
 const app = express();
+const allowedUrls =  envs.ALLOWED_URLS;
+
+app.use(cors(corsConfig));
+//app.use(cors({origin: allowedUrls}));
 
 app.use(express.json());
 

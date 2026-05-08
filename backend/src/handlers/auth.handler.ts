@@ -19,7 +19,7 @@ export const createAccount = async(req: Request, res: Response)=>{
     const handleExist = await User.findOne({handle: req.body.handle});
 
     if(handleExist){
-        return res.status(400).json({error: `Handle already exist: ${req.body.handle}`});
+        return res.status(400).json({error: `Username already exist: ${req.body.handle}`});
 
     }
     

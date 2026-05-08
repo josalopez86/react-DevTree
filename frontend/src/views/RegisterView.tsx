@@ -1,13 +1,36 @@
 import { useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
 import { ErrorMessage } from "../components/ErrorMessage";
+import type { RegisterForm } from "../types";
+import { AuthService } from '../services/auth.service';
+import { SuccessMessage } from "../components/SuccessMessage";
+import { useState } from "react";
 
 
 export const RegisterView = () => {
-    const {register, watch, handleSubmit, formState:{errors} } = useForm();
+    
+    const initialValues: RegisterForm = {
+        name:"test",
+        email:"test@test.com",
+        handle:"test123",
+        password:"12345678",
+        password_confirmation:"12345678",
+    };
 
-    const handleRegisater = () =>{
-        console.log("click");
+    const [success, setsuccess] = useState(false);
+    const [message, setmessage] = useState("");
+
+    const authService = new AuthService();
+
+    const {register, watch, handleSubmit, formState:{errors} } = useForm({ defaultValues: initialValues});
+
+    const password = watch("password");
+
+    const handleRegisater = async(formData: RegisterForm) =>{
+        const response = await authService.Register(formData);
+        setmessage(response.message);
+        setsuccess(response.success);
+
 
     }
 
@@ -26,7 +49,7 @@ export const RegisterView = () => {
                     className="bg-slate-100 border-none p-3 rounded-lg placeholder-slate-400"
                     {...register("name", {required: "Name is required"})}/>
 
-                {errors.name && <ErrorMessage>{errors.name.message?.toString()}</ErrorMessage>}
+                {errors.name && <ErrorMessage>{errors.name.message}</ErrorMessage>}
             </div>
             <div className="grid grid-cols-1 space-y-3">
                 <label htmlFor="email" className="text-2xl text-slate-500">E-mail</label>
@@ -35,8 +58,9 @@ export const RegisterView = () => {
                     type="email"
                     placeholder="Email"
                     className="bg-slate-100 border-none p-3 rounded-lg placeholder-slate-400"
-                    {...register("email", {required: "Email is required"})}/>
-                    {errors.email && <ErrorMessage>{errors.email.message?.toString()}</ErrorMessage>}
+                    {...register("email", {required: "Email is required", 
+                                            pattern: { value: /\S+@\S+\.\S+/,  message: "Invalid email"}})}/>
+                    {errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
             </div>
             <div className="grid grid-cols-1 space-y-3">
                 <label htmlFor="handle" className="text-2xl text-slate-500">User name</label>
@@ -46,7 +70,7 @@ export const RegisterView = () => {
                     placeholder="User name"
                     className="bg-slate-100 border-none p-3 rounded-lg placeholder-slate-400"
                     {...register("handle", {required: "User name is required"})}/>
-                    {errors.handle && <ErrorMessage>{errors.handle.message?.toString()}</ErrorMessage>}
+                    {errors.handle && <ErrorMessage>{errors.handle.message}</ErrorMessage>}
             </div>
             <div className="grid grid-cols-1 space-y-3">
                 <label htmlFor="password" className="text-2xl text-slate-500">Password</label>
@@ -55,8 +79,10 @@ export const RegisterView = () => {
                     type="password"
                     placeholder="Password"
                     className="bg-slate-100 border-none p-3 rounded-lg placeholder-slate-400"
-                    {...register("password", {required: "Password is required", min:8, max: 15})}/>
-                    {errors.password && <ErrorMessage>{errors.password.message?.toString()}</ErrorMessage>}
+                    {...register("password", {required: "Password is required", 
+                                                minLength:{value: 8, message:"Min 8 characters"}, 
+                                                maxLength: {value: 15, message:"Max 15 characters"}})}/>
+                    {errors.password && <ErrorMessage>{errors.password.message}</ErrorMessage>}
             </div>
 
             <div className="grid grid-cols-1 space-y-3">
@@ -65,8 +91,15 @@ export const RegisterView = () => {
                     id="password_confirmation"
                     type="password"
                     placeholder="Confirm Password"
-                    className="bg-slate-100 border-none p-3 rounded-lg placeholder-slate-400"/>
+                    className="bg-slate-100 border-none p-3 rounded-lg placeholder-slate-400"
+                    {...register("password_confirmation", {required: "Confirmation password is required",
+                                                            validate: (value)=> value ===password || "Passwords don't match"
+                    })}/>
+                    {errors.password_confirmation && <ErrorMessage>{errors.password_confirmation.message}</ErrorMessage>}
             </div>
+
+            {!success && message && <ErrorMessage>{message}</ErrorMessage>}
+            {success && message && <SuccessMessage>{message}</SuccessMessage>}
 
             <input
                 type="submit"
