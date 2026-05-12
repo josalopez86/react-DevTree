@@ -3,6 +3,8 @@ import { checkPassword, hashPassword } from '../config/auth';
 import { getSlug } from '../config/slug';
 import { User } from "../models/User";
 import { Request, Response } from "express";
+import { generateJWT } from '../config/jwt';
+import { AuthUser } from '../models/authUser';
 
 export const createAccount = async(req: Request, res: Response)=>{
 
@@ -43,5 +45,17 @@ export const logIn = async(req: Request, res: Response)=>{
         return res.status(400).json({error: error});
     }
 
-    return res.json(userExist);
+    console.log(userExist.id);
+
+    const userObj: AuthUser = {
+        userId: userExist.id,
+        name: userExist.name,
+        handler: userExist.handle,
+        email: userExist.email,
+
+    }
+
+    userObj.token = generateJWT(userObj);
+
+    return res.json(userObj);
 }

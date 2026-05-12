@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --exec ts-node src/index.ts",
+    "dev": "nodemon --exec ts-node src/index.ts --api",
     "build": "tsc",
     "start": "node dist/index.js"
   },
@@ -30,6 +30,7 @@
     "express": "^5.2.1",
     "express-validator": "^7.3.2",
     "iconv-lite": "^0.7.2",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.6.1",
     "slug": "^11.0.1"
   },
@@ -37,6 +38,7 @@
     "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/slug": "^5.0.9",
     "nodemon": "^3.1.14",
     "ts-node": "^10.9.2",

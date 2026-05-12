@@ -3,35 +3,33 @@ import { Link } from "react-router-dom"
 import { ErrorMessage } from "../components/ErrorMessage";
 import type { RegisterForm } from "../types";
 import { AuthService } from '../services/auth.service';
-import { SuccessMessage } from "../components/SuccessMessage";
-import { useState } from "react";
+import { toast } from "sonner";
 
 
 export const RegisterView = () => {
     
     const initialValues: RegisterForm = {
-        name:"test",
-        email:"test@test.com",
-        handle:"test123",
-        password:"12345678",
-        password_confirmation:"12345678",
+        name:"",
+        email:"",
+        handle:"",
+        password:"",
+        password_confirmation:"",
     };
-
-    const [success, setsuccess] = useState(false);
-    const [message, setmessage] = useState("");
 
     const authService = new AuthService();
 
-    const {register, watch, handleSubmit, formState:{errors} } = useForm({ defaultValues: initialValues});
+    const {register, watch, handleSubmit,reset, formState:{errors} } = useForm({ defaultValues: initialValues});
 
     const password = watch("password");
 
     const handleRegisater = async(formData: RegisterForm) =>{
         const response = await authService.Register(formData);
-        setmessage(response.message);
-        setsuccess(response.success);
-
-
+        if(response.success){
+            toast.success(response.message);
+            reset();
+        }else{
+            toast.error(response.message);
+        }
     }
 
   return (
@@ -97,9 +95,6 @@ export const RegisterView = () => {
                     })}/>
                     {errors.password_confirmation && <ErrorMessage>{errors.password_confirmation.message}</ErrorMessage>}
             </div>
-
-            {!success && message && <ErrorMessage>{message}</ErrorMessage>}
-            {success && message && <SuccessMessage>{message}</SuccessMessage>}
 
             <input
                 type="submit"

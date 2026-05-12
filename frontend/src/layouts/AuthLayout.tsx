@@ -1,7 +1,10 @@
 import { Outlet } from "react-router-dom"
+import { ToasterPopup } from "../config/toasterPopup"
+
 
 
 export const AuthLayout = () => {
+
   return (
     <>
       <div className="bg-slate-800 min-h-screen">
@@ -12,6 +15,7 @@ export const AuthLayout = () => {
               </div>
           </div>
       </div>
+      <ToasterPopup/>
     </>
   )
 }

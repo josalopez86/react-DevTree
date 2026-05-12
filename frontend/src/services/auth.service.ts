@@ -1,13 +1,15 @@
-import axios from "axios";
-import type { RegisterForm, RequestResponse } from "../types";
+import { isAxiosError } from "axios";
+import { api } from "../config/axios";
+import type { LogingForm, RegisterForm, RequestResponse, RequestResponseData, User } from "../types";
 
-const apiUrl = import.meta.env.VITE_API_URL;
+
 
 export class AuthService{
+
     Register = async(data: RegisterForm): Promise<RequestResponse>=> {
         try{
-            const url = `${apiUrl}/auth/register`;
-            const response = await axios.post(url, data);
+            const url = `/auth/register`;
+            const response = await api.post(url, data);
 
             if(response.status!==200){
                 return {message:response.data.error, success:false };
@@ -18,7 +20,21 @@ export class AuthService{
             
 
         }catch(error){
-            if (axios.isAxiosError(error)) {
+            if (isAxiosError(error)) {
+                return {message: error.response?.data.error, success:false };
+            }
+            return {message: "something went wrong!!", success:false };
+        }
+    }
+
+    Login = async(data: LogingForm): Promise<RequestResponseData<User>>=> {
+        try{
+            const url = `/auth/login`;
+            const response = await api.post<User>(url, data);
+
+            return { data:response.data, success:true , message: "Logged in."};
+        }catch(error){
+            if (isAxiosError(error)) {
                 return {message: error.response?.data.error, success:false };
             }
             return {message: "something went wrong!!", success:false };

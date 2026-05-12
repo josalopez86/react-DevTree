@@ -10,7 +10,16 @@ export type User ={
     password_confirmation: string
  }
 
+ export type LogingForm = Pick<User, "email"> & {
+    password: string
+ }
+
  export type RequestResponse ={
     message: string,
-    success: boolean
+    success: boolean,
+   
+ }
+
+ export type RequestResponseData<T> =  RequestResponse & {
+    data?: T
  }
