@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { AuthService } from "../services/auth.service";
 
 export const LoginView = () => {
+    const LocalStorageName= "AUTH_USER";
   const initialValues: LogingForm = {
     email:"test@test.com",
     password: "123456789"
@@ -18,6 +19,8 @@ export const LoginView = () => {
     const response = await authService.Login(formData);
         if(response.success){
             toast.success(`${response.message}:  ${response.data?.name}`);
+            localStorage.setItem(LocalStorageName, JSON.stringify(response.data));
+            reset();
         }else{
             toast.error(response.message);
         }

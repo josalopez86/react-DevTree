@@ -1,7 +1,9 @@
 import {Router} from "express";
 import { IUser, User } from "./models/User";
-import { getUsers } from "./handlers/user.handler";
+import { getUser, getUsers } from "./handlers/user.handler";
 
 export const userRouter = Router();
 
-userRouter.get("/", getUsers);
+userRouter.get("/users", getUsers);
+
+userRouter.get("/", getUser);
