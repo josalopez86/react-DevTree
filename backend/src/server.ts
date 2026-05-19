@@ -1,8 +1,8 @@
 import express from 'express';
 import cors from "cors";
 import { connectDB } from './config/bd';
-import { authRouter } from './auth.router';
-import { userRouter } from './user.router';
+import { authRouter } from './routes/auth.router';
+import { userRouter } from './routes/user.router';
 import { corsConfig } from './config/cors';
 import { envs } from './config/envs';
 

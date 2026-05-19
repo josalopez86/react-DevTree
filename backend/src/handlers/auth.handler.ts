@@ -44,9 +44,7 @@ export const logIn = async(req: Request, res: Response)=>{
     if(await checkPassword(password, userExist.password) == false){
         return res.status(400).json({error: error});
     }
-
-    console.log(userExist.id);
-
+    
     const userObj: AuthUser = {
         userId: userExist.id,
         name: userExist.name,

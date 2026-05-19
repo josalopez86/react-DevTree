@@ -15,7 +15,6 @@ export const LoginView = () => {
   const authService = new AuthService();
 
   const handleLogin = async(formData: LogingForm)=>{
-    console.log("test");
     const response = await authService.Login(formData);
         if(response.success){
             toast.success(`${response.message}:  ${response.data?.name}`);

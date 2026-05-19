@@ -2,15 +2,32 @@ import { Link, Outlet } from "react-router-dom";
 import { Toaster } from "sonner";
 import type { User } from "../types";
 import NavigationTabs from "../components/NavigationTabs";
+import { AuthService } from "../services/auth.service";
+import { useQuery } from "@tanstack/react-query";
 
-export function AppLayout() {
+const service = new AuthService();
+
+const getUser = async() =>{
     const LocalStorageName= "AUTH_USER";
 
-    const authUser =JSON.parse(localStorage.getItem(LocalStorageName) ?? "") as User;
+    const userStored =JSON.parse(localStorage.getItem(LocalStorageName) ?? "") as User;
 
-    console.log({authUser});
+    return await service.GetAuthUser(userStored.token);
+}
 
+export function AppLayout() {
+    const {data, isLoading} = useQuery({
+        queryKey:["getUser"],
+        queryFn: getUser,// service.GetAuthUser(userStored.token),         
+        refetchOnWindowFocus:false,
+        staleTime: 1000 * 60 * 5} //milisegundos 
+    );
 
+    //service.GetAuthUser(userStored.token).then(f =>{ authUser = f.data!});
+
+    if(!isLoading){
+        console.log(data);
+    }
 
     return (
         <>
@@ -20,7 +37,7 @@ export function AppLayout() {
                         <img src="/logo.svg" className="w-full block" />
                     </div>
                     <div className="md:w-1/3 md:flex md:justify-end">
-                    <h1 className="text-sm text-white mt-2 pr-2">{authUser.name}</h1>
+                    <h1 className="text-sm text-white mt-2 pr-2">CARGANDO...</h1>
                         <button
                             className=" bg-lime-500 p-2 text-slate-800 uppercase font-black text-xs rounded-lg cursor-pointer"
                             onClick={() => {}}

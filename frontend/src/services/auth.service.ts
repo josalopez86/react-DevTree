@@ -38,8 +38,26 @@ export class AuthService{
                 return {message: error.response?.data.error, success:false };
             }
             return {message: "something went wrong!!", success:false };
-
         }
+    }
 
+        GetAuthUser = async(token: string): Promise<RequestResponseData<User>>=> {
+        try{
+            const url = `/user/auth`;
+            const response = await api.get<User>(url, 
+            {
+                headers: {
+                Authorization: `Bearer ${token}`
+                }
+            });
+
+            return { data: response.data, success:true , message: "Logged in."};
+        }catch(error){
+            if (isAxiosError(error)) {
+                return {message: error.response?.data.error, success:false };
+            }
+            console.log(error);
+            return {message: "something went wrong!!", success:false };
+        }
     }
 }
