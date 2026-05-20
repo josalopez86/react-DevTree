@@ -41,15 +41,10 @@ export class AuthService{
         }
     }
 
-        GetAuthUser = async(token: string): Promise<RequestResponseData<User>>=> {
+        GetAuthUser = async(): Promise<RequestResponseData<User>>=> {
         try{
             const url = `/user/auth`;
-            const response = await api.get<User>(url, 
-            {
-                headers: {
-                Authorization: `Bearer ${token}`
-                }
-            });
+            const response = await api.get<User>(url);
 
             return { data: response.data, success:true , message: "Logged in."};
         }catch(error){

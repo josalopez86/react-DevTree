@@ -1,6 +1,5 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Navigate, Outlet } from "react-router-dom";
 import { Toaster } from "sonner";
-import type { User } from "../types";
 import NavigationTabs from "../components/NavigationTabs";
 import { AuthService } from "../services/auth.service";
 import { useQuery } from "@tanstack/react-query";
@@ -8,26 +7,35 @@ import { useQuery } from "@tanstack/react-query";
 const service = new AuthService();
 
 const getUser = async() =>{
-    const LocalStorageName= "AUTH_USER";
 
-    const userStored =JSON.parse(localStorage.getItem(LocalStorageName) ?? "") as User;
+    const response = await service.GetAuthUser();
+    if(!response.success){
+        throw new Error(response.message);
+    }
 
-    return await service.GetAuthUser(userStored.token);
+    return response;
 }
 
 export function AppLayout() {
-    const {data, isLoading} = useQuery({
+    const {data, isLoading, isError} = useQuery({
         queryKey:["getUser"],
-        queryFn: getUser,// service.GetAuthUser(userStored.token),         
+        queryFn: getUser,
         refetchOnWindowFocus:false,
+        retry:1,
         staleTime: 1000 * 60 * 5} //milisegundos 
     );
 
     //service.GetAuthUser(userStored.token).then(f =>{ authUser = f.data!});
 
-    if(!isLoading){
-        console.log(data);
+    if(isLoading){
+       return <h1>Loading...</h1> 
     }
+
+    if(isError){
+        return <Navigate to={"/auth/login"}/>;
+    }
+
+    console.log("Entro...");
 
     return (
         <>
@@ -37,7 +45,7 @@ export function AppLayout() {
                         <img src="/logo.svg" className="w-full block" />
                     </div>
                     <div className="md:w-1/3 md:flex md:justify-end">
-                    <h1 className="text-sm text-white mt-2 pr-2">CARGANDO...</h1>
+                    <h1 className="text-sm text-white mt-2 pr-2">{data?.data?.email}</h1>
                         <button
                             className=" bg-lime-500 p-2 text-slate-800 uppercase font-black text-xs rounded-lg cursor-pointer"
                             onClick={() => {}}
