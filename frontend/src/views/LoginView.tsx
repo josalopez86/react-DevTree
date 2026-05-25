@@ -7,11 +7,11 @@ import { AuthService } from "../services/auth.service";
 
 export const LoginView = () => {
     const LocalStorageName= "AUTH_USER";
-  const initialValues: LogingForm = {
-    email:"test@test.com",
-    password: "123456789"
-  }
-  const {register, handleSubmit, reset, formState:{errors}} = useForm({defaultValues:initialValues});
+    const initialValues: LogingForm = {
+        email:"test@test.com",
+        password: "123456789"
+    };
+  const {register, handleSubmit, formState:{errors}} = useForm({defaultValues:initialValues});
   const authService = new AuthService();
 
   const handleLogin = async(formData: LogingForm)=>{
@@ -19,7 +19,6 @@ export const LoginView = () => {
         if(response.success){
             toast.success(`${response.message}:  ${response.data?.name}`);
             localStorage.setItem(LocalStorageName, JSON.stringify(response.data));
-            reset();
         }else{
             toast.error(response.message);
         }

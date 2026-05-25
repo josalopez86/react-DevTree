@@ -21,7 +21,8 @@ export const getAuthUser = async(req: Request, res: Response)=>{
   return res.json({
     name: user.name,
     email: user.email,
-    handle: user.handle
+    handle: user.handle,
+    description: user.description
   });
 }
 
