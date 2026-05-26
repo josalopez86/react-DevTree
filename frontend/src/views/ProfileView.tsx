@@ -14,7 +14,7 @@ export function ProfileView() {
     
     console.log(data);
 
-    const {register, handleSubmit, formState:{errors}} = useForm({defaultValues:{
+    const {register, handleSubmit, formState:{errors}} = useForm<ProfileForm>({defaultValues:{
         handle: data?.handle,
         description: data?.description
     }});

@@ -1,3 +1,4 @@
+import { getSlug } from "../config/slug";
 import { IUser, User } from "../models/User";
 import { Request, Response } from "express";
 
@@ -35,4 +36,33 @@ export const getUserByEmail = async(req: Request, res: Response)=>{
     }
 
     return res.json(user);
+}
+
+export const updateProfile = async(req: Request, res: Response)=>{
+  try{
+    const {user: {email}} = (req as any);
+    let {handle, description} = req.body;
+    handle = getSlug(handle);
+
+    const validateUser = await User.findOne<IUser>({email: { $ne: email },
+    handle: handle});
+    
+    if(validateUser){
+      return res.status(400).json("Handle already used.");
+    }
+
+    const user = await User.updateOne({email: email},{description: description, handle: handle} );
+
+    if(!user){
+      return res.status(404).json("Couldn't found the user.");
+    }
+    if(user.modifiedCount > 0){
+      return res.json("User updated.");
+    }
+    return res.status(404).json("Couldn't update the user.");
+  }
+  catch(error){
+    console.log(error);
+    return res.status(500).json("Unhandled error. Try again.");
+  }
 }
