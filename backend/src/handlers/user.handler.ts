@@ -59,7 +59,7 @@ export const updateProfile = async(req: Request, res: Response)=>{
     if(user.modifiedCount > 0){
       return res.json("User updated.");
     }
-    return res.status(404).json("Couldn't update the user.");
+    return res.status(400).json("Couldn't update the user.");
   }
   catch(error){
     console.log(error);

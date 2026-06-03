@@ -3,6 +3,8 @@ import type { ProfileForm, User } from "../types";
 import { useQueryClient } from "@tanstack/react-query";
 import { Navigate } from "react-router-dom";
 import { ErrorMessage } from "../components/ErrorMessage";
+import { AuthService } from "../services/auth.service";
+import { toast } from "sonner";
 
 
 export function ProfileView() {
@@ -11,16 +13,22 @@ export function ProfileView() {
     const data : User = queryClient.getQueryData(['getUser'])!;
 
     if(!data) return <Navigate to={"/auth/login"}/>
-    
-    console.log(data);
 
     const {register, handleSubmit, formState:{errors}} = useForm<ProfileForm>({defaultValues:{
         handle: data?.handle,
         description: data?.description
     }});
 
-    const handleUserProfileForm = (formData: ProfileForm) =>{
-        console.log(formData);
+    const authService = new AuthService();
+
+    const handleUserProfileForm = async(formData: ProfileForm) =>{
+        const response = await authService.UpdateProfile(formData);
+        if(response.success){
+            toast.success(`${response.message}`);
+            queryClient.invalidateQueries({queryKey: ["getUser"] });
+        }else{
+            toast.error(response.message);
+        }
     }
     
     return (

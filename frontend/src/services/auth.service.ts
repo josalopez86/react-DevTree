@@ -56,15 +56,15 @@ export class AuthService{
         }
     }
 
-    UpdateProfile = async(data: ProfileForm): Promise<RequestResponseData<User>>=> {
+    UpdateProfile = async(data: ProfileForm): Promise<RequestResponseData<string>>=> {
         try{
-            const url = `/auth/login`;
-            const response = await api.post<User>(url, data);
+            const url = `/user`;
+            const response = await api.patch<string>(url, data);
 
-            return { data:response.data, success:true , message: "Logged in."};
+            return { data:response.data, success:true , message: response.data};
         }catch(error){
             if (isAxiosError(error)) {
-                return {message: error.response?.data.error, success:false };
+                return {message: error.response?.data, success:false };
             }
             return {message: "something went wrong!!", success:false };
         }
