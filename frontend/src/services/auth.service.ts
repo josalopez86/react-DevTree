@@ -69,4 +69,20 @@ export class AuthService{
             return {message: "something went wrong!!", success:false };
         }
     }
+
+    UploadImage = async(data: File): Promise<RequestResponseData<string>>=> {
+        try{
+            const url = `/user/image`;
+            let formData = new FormData();
+            formData.append("file", data);
+            const response = await api.post(url, formData);
+
+            return { data:response.data.image, success:true , message: response.data};
+        }catch(error){
+            if (isAxiosError(error)) {
+                return {message: error.response?.data, success:false };
+            }
+            return {message: "something went wrong!!", success:false };
+        }
+    }
 }

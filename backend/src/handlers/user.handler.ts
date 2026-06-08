@@ -1,4 +1,4 @@
-import { cloudy } from "../config/cloudinary";
+import { cloudinary } from "../config/cloudinary";
 import { getSlug } from "../config/slug";
 import { IUser, User } from "../models/User";
 import { Request, Response } from "express";
@@ -26,7 +26,8 @@ export const getAuthUser = async(req: Request, res: Response)=>{
     name: user.name,
     email: user.email,
     handle: user.handle,
-    description: user.description
+    description: user.description,
+    imageUrl: user.imageUrl
   });
 }
 
@@ -73,12 +74,27 @@ export const updateProfile = async(req: Request, res: Response)=>{
 export const uploadImage = async(req: Request, res: Response)=>{
   try{
     const form = formidable({multiples: false});
-    form.parse(req, (error, fields, files)=>{
-          console.log({error});
+    form.parse(req, async (error, fields, files)=>{
+      const filePath = files.file?.[0].filepath; 
+      if(!filePath){
+        return res.status(400).json("File is required.");
+      }
+      try{
+        const result = await cloudinary.uploader.upload(filePath, {folder:"devtree"});
+        const {user: {email}} = (req as any);
+        const user = await User.updateOne({email: email},{imageUrl: result.secure_url} );
+        if(!user){
+          return res.status(404).json("Couldn't found the user.");
+        }
+
+        res.json({image: result.secure_url});
+      }
+      catch(error){
+        console.log(error);
+        return res.status(400).json("Couldn't upload the image");
+      }
+
     });
-
-    res.json("uploding....");
-
   }catch(error)
   {
     console.log(error);

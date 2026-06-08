@@ -21,6 +21,32 @@ export function ProfileView() {
 
     const authService = new AuthService();
 
+    const handleChange = async(e: React.ChangeEvent<HTMLInputElement>)=>{
+
+        if(e.target.files){
+            const file = e.target.files[0]; 
+            if(!file.type.includes("image")){
+                toast.error("Should be an image.");
+                e.target.value = ""; 
+                return;
+            }
+
+            const response = await authService.UploadImage(file);
+            if(response.success){                
+                toast.success(`Image uploaded successfully.`);
+                queryClient.setQueryData(["getUser"], (prevData: User)=>{
+                    return{
+                        ...prevData,
+                        imageUrl: response.data
+
+                    }
+                });
+
+            }else{
+                toast.error(response.message);
+            }
+        }
+    }
     const handleUserProfileForm = async(formData: ProfileForm) =>{
         const response = await authService.UpdateProfile(formData);
         if(response.success){
@@ -71,7 +97,7 @@ export function ProfileView() {
                     name="handle"
                     className="border-none bg-slate-100 rounded-lg p-2"
                     accept="image/*"
-                    onChange={ () => {} }
+                    onChange={ handleChange }
                 />
             </div>
 

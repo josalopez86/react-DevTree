@@ -13,6 +13,7 @@ export const envs = {
   CLOUDINARY_KEY: get('CLOUDINARY_KEY').required().asString(),
   CLOUDINARY_NAME: get('CLOUDINARY_NAME').required().asString(),
   CLOUDINARY_SECRET: get('CLOUDINARY_SECRET').required().asString(),
+  CLOUDINARY_FOLDER: get('CLOUDINARY_FOLDER').required().asString(),
 }
 
 

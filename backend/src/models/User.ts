@@ -5,7 +5,8 @@ export interface IUser{
     email: string,
     password: string,
     handle: string,
-    description: string
+    description: string, 
+    imageUrl: string
 }
 
 const userSchema = new Schema({
@@ -37,7 +38,12 @@ const userSchema = new Schema({
         type: String,
         default:"",
         trim : true
+    },
+    imageUrl: {
+        type: String,
+        default:"",
     }
+
 });
 
 export const User = mongoose.model<IUser>("Users", userSchema);
