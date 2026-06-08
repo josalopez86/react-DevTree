@@ -5,6 +5,7 @@ frontend/dist
 frontend/node_modules
 /build
 /tmp
+/mongo_data
 
 # Logs
 logs

@@ -1,13 +1,16 @@
+import { cloudy } from "../config/cloudinary";
 import { getSlug } from "../config/slug";
 import { IUser, User } from "../models/User";
 import { Request, Response } from "express";
+import formidable  from "formidable";
 
 export const getUsers = async(req: Request, res: Response)=>{
 
   const users = await User.find<IUser>()
   .skip(0)
   .limit(10);
-    return res.json(users);
+
+  return res.json(users);
 }
 
 export const getAuthUser = async(req: Request, res: Response)=>{
@@ -62,6 +65,22 @@ export const updateProfile = async(req: Request, res: Response)=>{
     return res.status(400).json("Couldn't update the user.");
   }
   catch(error){
+    console.log(error);
+    return res.status(500).json("Unhandled error. Try again.");
+  }
+}
+
+export const uploadImage = async(req: Request, res: Response)=>{
+  try{
+    const form = formidable({multiples: false});
+    form.parse(req, (error, fields, files)=>{
+          console.log({error});
+    });
+
+    res.json("uploding....");
+
+  }catch(error)
+  {
     console.log(error);
     return res.status(500).json("Unhandled error. Try again.");
   }

@@ -3,7 +3,7 @@ import { envs } from './envs';
 
 export const connectDB = async() =>{
     try{
-        const url = `${envs.MONGO_URL}/${envs.MONGO_DB_NAME}`;
+        const url = `${envs.MONGO_URL}/${envs.MONGO_DB_NAME}?authSource=admin`;
         await mongoose.connect(url);
         console.log("DB connected.");
 

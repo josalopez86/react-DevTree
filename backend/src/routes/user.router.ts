@@ -1,6 +1,5 @@
 import {Router} from "express";
-import { IUser, User } from "../models/User";
-import { getAuthUser, getUserByEmail, getUsers, updateProfile } from "../handlers/user.handler";
+import { getAuthUser, getUserByEmail, getUsers, updateProfile, uploadImage } from "../handlers/user.handler";
 import { authenticate } from "../middleware/auth";
 import { body } from "express-validator";
 import { handleInputErrors } from "../middleware/validation";
@@ -11,9 +10,11 @@ userRouter.use(authenticate);
 
 userRouter.get("/auth", getAuthUser);
 
-userRouter.get("/:email", getUserByEmail);
-
 userRouter.get("/users", getUsers);
+
+userRouter.post("/image", uploadImage);
+
+userRouter.get("/:email", getUserByEmail);
 
 userRouter.patch("/",
     body('handle').notEmpty().withMessage("Handle is required"),

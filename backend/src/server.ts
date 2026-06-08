@@ -13,6 +13,7 @@ app.use(cors(corsConfig));
 //app.use(cors({origin: allowedUrls}));
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 //routing
 app.use("/api/auth", authRouter);
