@@ -6,7 +6,8 @@ export interface IUser{
     password: string,
     handle: string,
     description: string, 
-    imageUrl: string
+    imageUrl: string,
+    links: string
 }
 
 const userSchema = new Schema({
@@ -42,6 +43,10 @@ const userSchema = new Schema({
     imageUrl: {
         type: String,
         default:"",
+    },
+    links: {
+        type: String,
+        default:"[]",
     }
 
 });

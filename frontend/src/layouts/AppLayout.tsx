@@ -12,8 +12,6 @@ const getUser = async() =>{
         throw new Error(response.message);
     }
 
-    console.log(response.data);
-
     return response.data;
 }
 

@@ -27,7 +27,8 @@ export const getAuthUser = async(req: Request, res: Response)=>{
     email: user.email,
     handle: user.handle,
     description: user.description,
-    imageUrl: user.imageUrl
+    imageUrl: user.imageUrl,
+    links: user.links
   });
 }
 
@@ -45,7 +46,7 @@ export const getUserByEmail = async(req: Request, res: Response)=>{
 export const updateProfile = async(req: Request, res: Response)=>{
   try{
     const {user: {email}} = (req as any);
-    let {handle, description} = req.body;
+    let {handle, description, links} = req.body;
     handle = getSlug(handle);
 
     const validateUser = await User.findOne<IUser>({email: { $ne: email },
@@ -55,7 +56,7 @@ export const updateProfile = async(req: Request, res: Response)=>{
       return res.status(400).json("Handle already used.");
     }
 
-    const user = await User.updateOne({email: email},{description: description, handle: handle} );
+    const user = await User.updateOne({email: email},{description: description, handle: handle, links: links} );
 
     if(!user){
       return res.status(404).json("Couldn't found the user.");

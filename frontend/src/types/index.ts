@@ -5,7 +5,8 @@ export type User ={
     handle: string,
     token: string,
     description: string,
-    imageUrl: string
+    imageUrl: string,
+    links: string
  }
 
  export type RegisterForm = Pick<User, "handle" | "email" | "name" > & {
@@ -28,3 +29,12 @@ export type User ={
  export type RequestResponseData<T> =  RequestResponse & {
     data?: T
  }
+
+ export type SocialNetwork = {
+   id: number,
+   name: string,
+   url: string,
+   enabled: boolean
+ }
+
+ export type DevTreeLink = Pick<SocialNetwork, "name" | "url" | "enabled">
