@@ -30,30 +30,52 @@ export const LinkTreeView = () => {
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>)=>{
     const updatedLink = devTreeLinks.map(link=> link.name === e.target.name ? {...link, url:e.target.value } : link);
     setDevTreeLinks(updatedLink);
-    queryclient.setQueriesData({queryKey:["getUser"]}, (prevData: User)=>{
-      return {
-        ...prevData,        
-        links: JSON.stringify(updatedLink)
-      };
-    });
+    // queryclient.setQueriesData({queryKey:["getUser"]}, (prevData: User)=>{
+    //   return {
+    //     ...prevData,        
+    //     links: JSON.stringify(updatedLink)
+    //   };
+    // });
   }
 
   const handleEnableLink = (value: boolean, name: string)=>{
-    const updatedLink = devTreeLinks.map(link=> {
+    const updatedLink = devTreeLinks.map(link=> {      
       if(link.name === name){
         if(value && !isValidURL(link.url)){
           toast.error("Invalid URL.");
           return link;
         }
         link.enabled = value;
-      }      
+      }
       return link;
     });
     setDevTreeLinks(updatedLink);
+
+
+    let updatedItems: SocialNetwork[] = [];
+    const selectedSocialNetwork = updatedLink.find(link=>link.name === name);
+    const alreadySelected = updatedLink.filter(link => link.enabled && link.name !== name)
+                                        .map((link, index) => ({
+                                            ...link,
+                                            id: index + 1
+                                        }));
+    
+    if(selectedSocialNetwork?.enabled){
+      const newItem = {
+        ...selectedSocialNetwork,
+        id:alreadySelected.length+1
+      };
+      updatedItems = [...alreadySelected, newItem];
+    }else{
+      updatedItems = [...alreadySelected, {id: 0, enabled: false, url: selectedSocialNetwork?.url?? "", name: selectedSocialNetwork?.name ??""}];
+    }
+
+    console.log(updatedItems);
+
     queryclient.setQueriesData({queryKey:["getUser"]}, (prevData: User)=>{
       return {
         ...prevData,
-        links: JSON.stringify(updatedLink)
+        links: JSON.stringify(updatedItems)
       };
     });
   }
